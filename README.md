@@ -1,15 +1,16 @@
-# Angular7 Authentication with Firebase5
+# Angular 12 Authentication with AngularFire 6 and Firebase 7
 
 Learn to create full Firebase authentication system with Angular7 using AngularFire2 library.
 
 ## Written Article
-[Full Angular 7 Firebase Authentication System](https://www.positronx.io/full-angular-7-firebase-authentication-system)
+[Full Angular 12 Firebase Authentication System](https://www.positronx.io/full-angular-7-firebase-authentication-system)
 
 
 - Sign in with Google
 - Sign in with Facebook
 - Sign in with username/password
 - Sign up with username/password
+- Sign in with phone number/OTP
 - Recover forget password
 - Send verification mail to a newly created user
 - Prevent user to access app dashboard unless email is verified
