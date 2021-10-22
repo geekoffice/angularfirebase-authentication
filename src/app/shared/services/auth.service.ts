@@ -5,6 +5,8 @@ import { AngularFireAuth } from "@angular/fire/auth";
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
 import { Router } from "@angular/router";
 
+declare var window: any;
+
 @Injectable({
   providedIn: 'root'
 })
@@ -79,7 +81,31 @@ export class AuthService {
   // Returns true when user is looged in and email is verified
   get isLoggedIn(): boolean {
     const user = JSON.parse(localStorage.getItem('user'));
-    return (user !== null && user.emailVerified !== false) ? true : false;
+    return (user !== null && (user.emailVerified !== false || !!user.phoneNumber)) ? true : false;
+  }
+
+  // OTP Request with Phone
+  RequestOTP(phone: string) {
+    return this.afAuth.signInWithPhoneNumber(`+1${phone}`, window.recaptchaVerifier).then(result => {
+      window.confirmationResult = result;
+      // this.SetUserData(result.user);
+    }).catch(error => {
+      window.alert(error)
+    });
+  }
+
+  // Sign in with Phone
+  SignInWithPhone(otp: string) {
+    return window.confirmationResult.confirm(otp).then((result) => {
+      // User signed in successfully.
+      this.ngZone.run(() => {
+        this.router.navigate(['dashboard']);
+      })
+      this.SetUserData(result.user);
+    }).catch((error) => {
+      // User couldn't sign in (bad verification code?)
+      window.alert(error)
+    });
   }
 
   // Sign in with Google
@@ -107,6 +133,7 @@ export class AuthService {
     const userRef: AngularFirestoreDocument<any> = this.afs.doc(`users/${user.uid}`);
     const userData: User = {
       uid: user.uid,
+      phoneNumber: user.phoneNumber,
       email: user.email,
       displayName: user.displayName,
       photoURL: user.photoURL,

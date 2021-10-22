@@ -9,21 +9,59 @@
 
     <div class="authBlock">
       <h3>Sign In</h3>
-      <div class="formGroup">
-        <input type="text" class="formControl" placeholder="Username" #userName required>
+      <div id="recaptcha-container"></div>
+
+      <div *ngIf="showPhoneSignIn == false">
+        <div class="formGroup">
+          <input type="text" class="formControl" placeholder="Username" #userName required>
+        </div>
+
+        <div class="formGroup">
+          <input type="password" class="formControl" placeholder="Password" #userPassword required>
+        </div>
+
+        <!-- Calling SignIn Api from AuthService -->
+        <div class="formGroup">
+          <input type="button" class="btn btnPrimary" value="Log in" (click)="authService.SignIn(userName.value, userPassword.value)">
+        </div>
       </div>
 
-      <div class="formGroup">
-        <input type="password" class="formControl" placeholder="Password" #userPassword required>
+      <div *ngIf="showPhoneSignIn == true && showPhoneOTP == false">
+        <div class="formGroup">
+          <input type="text" class="formControl" placeholder="5556667777" #phone required>
+        </div>
+
+        <div class="formGroup">
+          <input type="button" class="btn btnPrimary" value="Log in" (click)="signInWithPhone(phone.value)">
+        </div>
       </div>
 
-      <!-- Calling SignIn Api from AuthService -->
-      <div class="formGroup">
-        <input type="button" class="btn btnPrimary" value="Log in" (click)="authService.SignIn(userName.value, userPassword.value)">
+      <div *ngIf="showPhoneSignIn == true && showPhoneOTP == true">
+        <div class="formGroup">
+          <input type="text" class="formControl" placeholder="1234" #otp required>
+        </div>
+
+        <div class="formGroup">
+          <input type="button" class="btn btnPrimary" value="Verify OTP" (click)="authService.SignInWithPhone(otp.value)">
+        </div>
+
+        <div class="formGroup">
+          <input type="button" class="btn btnPrimary" value="Cancel" (click)="showPhoneOTP = false">
+        </div>
       </div>
 
       <div class="formGroup">
         <span class="or"><span class="orInner">Or</span></span>
+      </div>
+
+      <!-- Calling Phone Login from AuthService -->
+      <div class="formGroup">
+        <button *ngIf="showPhoneSignIn == false" type="button" class="btn phone-button" (click)="showPhoneSignIn = true">
+          Log in with Phone
+        </button>
+        <button *ngIf="showPhoneSignIn == true" type="button" class="btn email-button" (click)="showPhoneSignIn = false">
+          Log in with Email
+        </button>
       </div>
 
       <!-- Calling GoogleAuth Api from AuthService -->
